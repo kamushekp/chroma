@@ -1,5 +1,6 @@
 use super::positional_posting_list_value::PositionalPostingList;
 use crate::errors::{ChromaError, ErrorCodes};
+use crate::types::EmbeddingRecord;
 use arrow::array::{Array, Int32Array};
 use parking_lot::RwLock;
 use roaring::RoaringBitmap;
@@ -182,6 +183,7 @@ pub(crate) enum Value {
     IntValue(i32),
     UintValue(u32),
     RoaringBitmapValue(RoaringBitmap),
+    EmbeddingRecordValue(EmbeddingRecord),
 }
 
 impl Clone for Value {
@@ -207,6 +209,7 @@ impl Clone for Value {
             Value::PositionalPostingListValue(list) => {
                 Value::PositionalPostingListValue(list.clone())
             }
+            Value::EmbeddingRecordValue(record) => Value::EmbeddingRecordValue(record.clone()),
             Value::StringValue(s) => Value::StringValue(s.clone()),
             Value::RoaringBitmapValue(bitmap) => Value::RoaringBitmapValue(bitmap.clone()),
             Value::IntValue(i) => Value::IntValue(*i),
@@ -222,6 +225,7 @@ impl Value {
             Value::PositionalPostingListValue(list) => {
                 unimplemented!("Size of positional posting list")
             }
+            Value::EmbeddingRecordValue(record) => unimplemented!(),
             Value::StringValue(s) => s.len(),
             Value::RoaringBitmapValue(bitmap) => bitmap.serialized_size(),
             Value::IntValue(_) | Value::UintValue(_) => 4,
@@ -235,6 +239,7 @@ impl From<&Value> for ValueType {
             Value::Int32ArrayValue(_) => ValueType::Int32Array,
             Value::PositionalPostingListValue(_) => ValueType::PositionalPostingList,
             Value::RoaringBitmapValue(_) => ValueType::RoaringBitmap,
+            Value::EmbeddingRecordValue(_) => unimplemented!(),
             Value::StringValue(_) => ValueType::String,
             Value::IntValue(_) => ValueType::Int,
             Value::UintValue(_) => ValueType::Uint,
@@ -246,6 +251,7 @@ impl From<&Value> for ValueType {
 pub(crate) enum ValueType {
     Int32Array,
     PositionalPostingList,
+    EmbeddingRecord,
     RoaringBitmap,
     String,
     Int,
