@@ -240,6 +240,9 @@ impl BlockDeltaInner {
                 bit_util::round_upto_multiple_of_64((item_count + 1) * 4)
             }
             ValueType::Uint => 0,
+            ValueType::EmbeddingRecord => {
+                // REUSME POINT!
+            }
             _ => unimplemented!("Value type not implemented"),
         }
     }
@@ -456,7 +459,7 @@ mod test {
     }
 
     #[test]
-    fn get_embedding_record_val() {
+    fn test_embedding_record_val() {
         let block_provider = ArrowBlockProvider::new();
         let block = block_provider.create_block(KeyType::Uint, ValueType::EmbeddingRecord);
         let delta = BlockDelta::from(block.clone());
