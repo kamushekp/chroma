@@ -241,7 +241,7 @@ impl BlockDeltaInner {
             }
             ValueType::Uint => 0,
             ValueType::EmbeddingRecord => {
-                // REUSME POINT!
+                // RESUME POINT!
             }
             _ => unimplemented!("Value type not implemented"),
         }
